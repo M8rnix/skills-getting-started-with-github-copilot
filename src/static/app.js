@@ -20,11 +20,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
 
+        // Create participants list HTML
+        let participantsHTML = '<div class="participants"><h5>Deelnemers</h5>';
+        if (details.participants.length > 0) {
+          participantsHTML += '<ul>';
+          details.participants.forEach(participant => {
+            participantsHTML += `<li>${participant}</li>`;
+          });
+          participantsHTML += '</ul>';
+        } else {
+          participantsHTML += '<p class="no-participants">Nog geen deelnemers ingeschreven</p>';
+        }
+        participantsHTML += '</div>';
+
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          ${participantsHTML}
         `;
 
         activitiesList.appendChild(activityCard);
@@ -73,6 +87,9 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         messageDiv.classList.add("hidden");
       }, 5000);
+
+      // Refresh activities to show updated participant list
+      fetchActivities();
     } catch (error) {
       messageDiv.textContent = "Failed to sign up. Please try again.";
       messageDiv.className = "error";
